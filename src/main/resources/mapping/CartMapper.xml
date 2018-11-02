@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ls.example.demo01.dao.cart.CartDao" >
+
+    <select id="findListByUid" resultMap="searchMap">
+        SELECT t.*,g.* FROM cart t, goods g
+        WHERE uid = #{uid} AND g.id = t.gid
+    </select>
+
+    <resultMap id="searchMap" type="com.ls.example.demo01.entity.cart.CartEntity">
+        <id column="uid" property="uid"></id>
+        <id column="gid" property="gid"></id>
+        <result column="buynum" property="buynum"></result>
+        <collection property="goodsEntity" ofType="com.ls.example.demo01.entity.goods.GoodsEntity">
+            <id column="id" property="id" />
+            <result column="name" property="name" />
+            <result column="marketprice" property="marketprice" />
+            <result column="estoreprice" property="estoreprice" />
+            <result column="category_id" property="category_id" />
+            <result column="num" property="num" />
+            <result column="titleimage" property="titleimage" />
+            <result column="description" property="description" />
+        </collection>
+    </resultMap>
+
+    <delete id="delete">
+        DELETE FROM cart WHERE uid = #{uid} AND gid = #{gid}
+    </delete>
+
+    <select id="findOneByUidAndGid" resultType="com.ls.example.demo01.entity.cart.CartEntity">
+        SELECT * FROM cart WHERE uid = #{uid} AND gid = #{gid}
+    </select>
+
+    <insert id="insert" >
+        INSERT INTO cart (uid,gid,buynum) VALUES (#{uid},#{gid},#{buynum})
+    </insert>
+
+    <update id="update">
+        UPDATE cart SET buynum = #{buynum} WHERE uid = #{uid} AND gid = #{gid}
+    </update>
+
+    <delete id="deleteByUid">
+        DELETE FROM cart WHERE uid = #{uid}
+    </delete>
+
+    <select id="findListByUidAndGids" resultMap="searchMap">
+        SELECT t.*,g.* FROM cart t, goods g WHERE uid = #{uid} AND g.id = t.gid AND gid IN
+        <foreach item="item" collection="gids" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <delete id="deleteMapByCarts">
+        DELETE FROM cart WHERE uid = #{uid} AND gid IN
+        <foreach item="item" collection="gids" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

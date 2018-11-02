@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ls.example.demo01.dao.system.RoleDao">
+
+    <select id="findOneByName" parameterType="map"
+            resultType="com.ls.example.demo01.entity.system.RoleEntity">
+        SELECT * FROM role
+        <where>
+            <if test="name != null and name != ''">
+                name = #{name}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO role (name,state)
+        VALUES (#{name},#{state})
+    </insert>
+
+    <update id="update">
+        UPDATE role
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="state != null and state != ''">
+                state = #{state},
+            </if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <select id="countByMap" resultType="int">
+        SELECT COUNT(*) FROM role
+    </select>
+
+    <select id="list" resultType="com.ls.example.demo01.entity.system.RoleEntity">
+        SELECT * FROM role WHERE state = 1
+    </select>
+
+    <select id="findListByMap" resultType="com.ls.example.demo01.entity.system.RoleEntity">
+        SELECT * FROM role
+        LIMIT #{limitStart},#{limitEnd}
+    </select>
+
+    <select id="findOneByid" resultType="com.ls.example.demo01.entity.system.RoleEntity">
+        SELECT * FROM role WHERE id = #{id}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM role WHERE id = #{id}
+    </delete>
+
+</mapper>

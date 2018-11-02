@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ls.example.demo01.dao.goods.CategoryDao" >
+
+    <select id="search" resultMap="searchMap">
+        SELECT t.id parentid,t.type parenttype,t.pid parentpid,h.* FROM category t,category h
+        WHERE t.pid = 0 AND t.id = h.pid
+    </select>
+
+    <resultMap id="searchMap" type="com.ls.example.demo01.entity.goods.CategoryEntity">
+        <id column="parentid" property="id"></id>
+        <result column="parenttype" property="type"></result>
+        <result column="parentpid" property="pid"></result>
+        <collection property="categoryList" ofType="com.ls.example.demo01.entity.goods.CategoryEntity">
+            <id column="id" property="id" />
+            <result column="type" property="type" />
+            <result column="pid" property="pid" />
+        </collection>
+    </resultMap>
+
+    <select id="findOneById" resultType="com.ls.example.demo01.entity.goods.CategoryEntity">
+        SELECT * FROM category t
+        WHERE t.id = #{categoryId}
+    </select>
+
+    <select id="findByPid" resultType="com.ls.example.demo01.entity.goods.CategoryEntity">
+        SELECT * FROM category t
+        WHERE t.pid = #{categoryId}
+    </select>
+
+</mapper>

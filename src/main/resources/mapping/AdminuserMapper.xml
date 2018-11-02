@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ls.example.demo01.dao.system.AdminuserDao">
+
+    <select id="findListByUsername" parameterType="map"
+            resultType="com.ls.example.demo01.entity.system.AdminuserEntity">
+        SELECT * FROM adminuser
+        <where>
+            <if test="username != null and username != ''">
+                username LIKE CONCAT('%',#{username},'%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO adminuser (username,password,createtime,status,rid)
+        VALUES (#{username},#{password},#{createtime},#{status},#{rid})
+    </insert>
+
+    <update id="update">
+        UPDATE adminuser
+        <trim prefix="set" suffixOverrides=",">
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            <if test="rid != null and rid != ''">
+                rid = #{rid},
+            </if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <select id="countByMap" resultType="int">
+        SELECT COUNT(*) FROM adminuser
+    </select>
+
+    <select id="findListByMap" resultType="com.ls.example.demo01.entity.system.AdminuserEntity">
+        SELECT * FROM adminuser
+        LIMIT #{limitStart},#{limitEnd}
+    </select>
+
+    <select id="findOneByid" resultType="com.ls.example.demo01.entity.system.AdminuserEntity">
+        SELECT * FROM adminuser WHERE id = #{id}
+    </select>
+
+    <delete id="delete">
+        DELETE FROM adminuser WHERE id = #{id}
+    </delete>
+
+</mapper>

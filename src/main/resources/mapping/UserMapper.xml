@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ls.example.demo01.dao.system.UserDao" >
+    
+    <select id="findUserById" parameterType="Integer" 
+            resultType="com.ls.example.demo01.entity.system.UserEntity">
+        SELECT * FROM user WHERE id = #{id}
+    </select>
+    
+    <update id="updateUser" parameterType="map">
+        UPDATE user SET username = #{username},
+                        password = #{password},
+                        email = #{email},
+                        name = #{name},
+                        sex = #{sex},
+                        birthday = #{birthday},
+                        address = #{address},
+                        telphone = #{telphone}
+        <where>
+            <if test="id != null and id != ''">
+                AND id = #{id}
+            </if>
+        </where>
+    </update>
+
+    <select id="findUserByUsername" parameterType="map"
+            resultType="com.ls.example.demo01.entity.system.UserEntity">
+        SELECT * FROM user
+        <where>
+            <if test="username != null and username != ''">
+                AND username = #{username}
+            </if>
+        </where>
+    </select>
+
+    <select id="findUserByUsernameOrEmail" parameterType="map"
+            resultType="com.ls.example.demo01.entity.system.UserEntity">
+        SELECT * FROM user
+        <where>
+            <if test="username != null and username != ''">
+                username = #{username} OR email = #{username}
+            </if>
+        </where>
+    </select>
+
+    <select id="findUserByTelphone" parameterType="map"
+            resultType="com.ls.example.demo01.entity.system.UserEntity">
+        SELECT * FROM user
+        <where>
+            <if test="telphone != null and telphone != ''">
+                AND telphone = #{telphone}
+            </if>
+        </where>
+    </select>
+
+    <select id="findUserByEmail" parameterType="map"
+            resultType="com.ls.example.demo01.entity.system.UserEntity">
+        SELECT * FROM user
+        <where>
+            <if test="email != null and email != ''">
+                email = #{email}
+            </if>
+        </where>
+    </select>
+
+    <select id="findMaxId" resultType="Integer">
+        SELECT MAX(id) FROM user
+    </select>
+
+    <insert id="insertUser" parameterType="com.ls.example.demo01.entity.system.UserEntity">
+        <selectKey keyProperty="id" order="AFTER" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO user (username, password, email, name, sex, birthday, address, telphone)
+        VALUES (#{username}, #{password}, #{email}, #{name}, #{sex}, #{birthday,}, #{address}, #{telphone})
+    </insert>
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ls.example.demo01.dao.cart.MainPageContentDao">
+
+    <select id="list" parameterType="Integer"
+            resultMap="MainPageContent">
+        SELECT c.*,t.titleimage AS titleimage,t.name AS name
+        FROM main_page_content c,goods t
+        WHERE c.content_type = #{contentType} AND c.goods_id = t.id
+        ORDER BY sortnumber
+    </select>
+
+    <resultMap id="MainPageContent"
+               type="com.ls.example.demo01.entity.cart.MainPageContentEntity">
+        <id column="id" property="id"></id>
+        <result column="goods_id" property="goods_id"></result>
+        <result column="content_type" property="content_type"></result>
+        <result column="sortnumber" property="sortnumber"></result>
+        <association property="goodsEntity"
+                     javaType="com.ls.example.demo01.entity.goods.GoodsEntity">
+            <id column="goods_id" property="id"></id>
+            <result column="titleimage" property="titleimage"></result>
+            <result column="name" property="name"></result>
+        </association>
+    </resultMap>
+
+    <select id="findOneById" resultMap="MainPageContent">
+        SELECT c.*,t.titleimage AS titleimage,t.name AS name
+        FROM main_page_content c,goods t
+        WHERE c.goods_id = t.id AND c.id = #{id}
+    </select>
+
+    <select id="findOneLETSortnumber" resultMap="MainPageContent">
+        SELECT c.*,t.titleimage AS titleimage,t.name AS name
+        FROM main_page_content c,goods t
+        WHERE c.content_type = #{content_type} AND c.goods_id = t.id
+        AND <![CDATA[ sortnumber <= #{sortnumber} ]]> AND c.id != #{id}
+        ORDER BY c.sortnumber DESC
+        LIMIT 0,1
+    </select>
+
+    <select id="findOneGETSortnumber" resultMap="MainPageContent">
+        SELECT c.*,t.titleimage AS titleimage,t.name AS name
+        FROM main_page_content c,goods t
+        WHERE c.content_type = #{content_type} AND c.goods_id = t.id
+        AND <![CDATA[ sortnumber >= #{sortnumber} ]]> AND c.id != #{id}
+        ORDER BY c.sortnumber DESC
+        LIMIT 0,1
+    </select>
+
+    <update id="update">
+        UPDATE main_page_content
+        <trim prefix="set" suffixOverrides=",">
+            <if test="goods_id != null and goods_id != ''">
+                goods_id = #{goods_id},
+            </if>
+            <if test="content_type != null and content_type != ''">
+                content_type = #{content_type},
+            </if>
+            <if test="sortnumber != null and sortnumber != ''">
+                sortnumber = #{sortnumber},
+            </if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+    <insert id="insert">
+        INSERT INTO main_page_content (goods_id,content_type,sortnumber)
+        VALUES (#{goods_id},#{content_type},#{sortnumber})
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM main_page_content WHERE id = #{id}
+    </delete>
+
+    <select id="findOneByContenttypeANDGoodsid" resultMap="MainPageContent">
+        SELECT c.*,t.titleimage AS titleimage,t.name AS name
+        FROM main_page_content c,goods t
+        WHERE c.content_type = #{contenttype} AND c.goods_id = t.id
+        AND c.goods_id = #{goodsid}
+    </select>
+
+    <select id="listByGoodsId" resultMap="MainPageContent">
+        SELECT c.*,t.titleimage AS titleimage,t.name AS name
+        FROM main_page_content c,goods t
+        WHERE c.goods_id = t.id AND c.goods_id = #{goodsid}
+    </select>
+
+</mapper>
